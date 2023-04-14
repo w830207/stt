@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stt/routes/pages.dart';
 
+import 'data/services/recording_record_service/service.dart';
+
 void main() async {
   await initialized();
   runApp(const MyApp());
@@ -31,4 +33,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-initialized() async {}
+initialized() async {
+  Get.put(RecordingRecordsService());
+}

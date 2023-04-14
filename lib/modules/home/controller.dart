@@ -6,12 +6,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stt/common/popup.dart' as popup;
+import 'package:stt/data/models/recording_record_model.dart';
+import 'package:stt/data/services/recording_record_service/service.dart';
 
 class HomeController extends GetxController {
-  RxList list = [].obs;
   late final RecorderController recorderController;
-  late String path;
   late Directory appDirectory;
+  late final RxList recordingRecordsList;
+  DateTime tempTime = DateTime(2011, 11, 11, 11, 11);
 
   Future<void> onFetchMore() async {}
 
@@ -22,11 +24,11 @@ class HomeController extends GetxController {
     super.onInit();
     getDir();
     initRecorderController();
+    recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
   }
 
   void getDir() async {
     appDirectory = await getApplicationDocumentsDirectory();
-    path = "${appDirectory.path}/recording.m4a";
   }
 
   void initRecorderController() {
@@ -37,21 +39,25 @@ class HomeController extends GetxController {
       ..sampleRate = 44100;
   }
 
-  void recordingOnStart(LongPressStartDetails details) {
+  Future<void> recordingOnStart(LongPressStartDetails details) async {
     popup.recording(recorderController);
-    var now = DateTime.now();
-    DateFormat("y-M-d-H-m-s").format(now);
-
+    tempTime = DateTime.now().toLocal();
+    String formattedTime =
+        DateFormat("yMMddHHmmss").format(tempTime).toString();
+    final path = "${appDirectory.path}/recording-$formattedTime.m4a";
     try {
-      recorderController.record(path: path);
+      await recorderController.record(path: path);
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  void recordingOnEnd(LongPressEndDetails details) {
+  Future<void> recordingOnEnd(LongPressEndDetails details) async {
     recorderController.reset();
     popup.stop();
-    recorderController.stop(false);
+    final path = await recorderController.stop(false);
+    final record = RecordingRecordModel.fromJson(
+        {'path': path, 'createdTime': tempTime.toString()});
+    RecordingRecordsService.to.addRecord(record);
   }
 }

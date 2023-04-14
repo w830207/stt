@@ -12,7 +12,7 @@ Future recording(RecorderController recorderController) async {
     ..maskColor = Colors.black12
     ..indicatorWidget = AudioWaveforms(
       enableGesture: true,
-      size: Size(1.sw / 1.7, 50),
+      size: Size(0.5.sw, 70),
       recorderController: recorderController,
       waveStyle: const WaveStyle(
         waveColor: Colors.white,
