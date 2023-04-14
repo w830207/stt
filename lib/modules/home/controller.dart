@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stt/common/popup.dart' as popup;
 import 'package:stt/data/models/recording_record_model.dart';
+import 'package:stt/data/models/response_model.dart';
+import 'package:stt/data/services/api_service/service.dart';
 import 'package:stt/data/services/recording_record_service/service.dart';
 
 class HomeController extends GetxController {
@@ -59,5 +61,9 @@ class HomeController extends GetxController {
     final record = RecordingRecordModel.fromJson(
         {'path': path, 'createdTime': tempTime.toString()});
     RecordingRecordsService.to.addRecord(record);
+  }
+
+  Future<ResponseModel> speechToText(String path) async {
+    return await ApiService.to.automaticSpeechRecognition(filePath: path);
   }
 }

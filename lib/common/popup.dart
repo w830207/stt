@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -5,6 +7,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future stop() async {
   await EasyLoading.dismiss();
+}
+
+bool isLoading() {
+  return EasyLoading.isShow;
+}
+
+Future loading() async {
+  EasyLoading.instance.indicatorWidget = SizedBox(
+    width: 50,
+    child: Column(
+      children: const [
+        SpinKitFadingCircle(
+          color: Colors.white,
+        ),
+        Text(
+          "loading",
+          style: TextStyle(color: Colors.white),
+        ),
+      ],
+    ),
+  );
+  await EasyLoading.show();
 }
 
 Future recording(RecorderController recorderController) async {

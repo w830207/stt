@@ -3,28 +3,27 @@ import 'dart:async';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 
-class WaveBubble extends StatefulWidget {
+class WavePlayer extends StatefulWidget {
   final String path;
   final double width;
 
-  const WaveBubble({
+  const WavePlayer({
     Key? key,
     required this.width,
     required this.path,
   }) : super(key: key);
 
   @override
-  State<WaveBubble> createState() => _WaveBubbleState();
+  State<WavePlayer> createState() => _WavePlayerState();
 }
 
-class _WaveBubbleState extends State<WaveBubble> {
+class _WavePlayerState extends State<WavePlayer> {
   late PlayerController controller;
   late StreamSubscription<PlayerState> playerStateSubscription;
 
   final playerWaveStyle = const PlayerWaveStyle(
     fixedWaveColor: Colors.white54,
     liveWaveColor: Colors.white,
-    // spacing: 6,
   );
 
   @override
@@ -33,17 +32,18 @@ class _WaveBubbleState extends State<WaveBubble> {
     _preparePlayer();
   }
 
-  void _preparePlayer() async {
+  Future<void> _preparePlayer() async {
     controller = PlayerController();
-    controller.preparePlayer(path: widget.path);
-    controller.extractWaveformData(
+    await controller.preparePlayer(path: widget.path);
+    await controller.extractWaveformData(
       path: widget.path,
       noOfSamples: playerWaveStyle.getSamplesForWidth(widget.width),
     );
     // .then((waveformData) => debugPrint(waveformData.toString()));
 
-    playerStateSubscription = controller.onPlayerStateChanged.listen((state) {
-      if (state.isStopped) _preparePlayer();
+    playerStateSubscription =
+        controller.onPlayerStateChanged.listen((state) async {
+      if (state.isStopped) await _preparePlayer();
       setState(() {});
     });
   }
@@ -83,8 +83,9 @@ class _WaveBubbleState extends State<WaveBubble> {
           AudioFileWaveforms(
             size: Size(widget.width, 70),
             playerController: controller,
-            waveformType: WaveformType.fitWidth,
+            waveformType: WaveformType.long,
             playerWaveStyle: playerWaveStyle,
+            continuousWaveform: false,
           ),
         ],
       ),

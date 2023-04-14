@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stt/data/models/recording_record_model.dart';
 import 'package:stt/widgets/float_button.dart';
-import 'package:stt/widgets/wave_bubble.dart';
+import 'package:stt/widgets/speech_to_text_box.dart';
 import '../../widgets/scroll_update_list.dart';
 import 'controller.dart';
 
@@ -38,20 +38,11 @@ class HomePage extends GetView<HomeController> {
 
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 12.r),
-                            child: Container(
+                            child: SpeechToTextBox(
                               width: 1.sw - 48.r,
                               height: 1.sw - 48.r,
-                              color: Colors.black26,
-                              child: Column(
-                                children: [
-                                  Text(record.path),
-                                  Text(record.createdTime.toString()),
-                                  WaveBubble(
-                                    width: 200,
-                                    path: record.path,
-                                  ),
-                                ],
-                              ),
+                              record: record,
+                              computeOnPressed: controller.speechToText,
                             ),
                           );
                         },

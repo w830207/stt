@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:stt/data/services/api_service/service.dart';
 import 'package:stt/routes/pages.dart';
 
 import 'data/services/recording_record_service/service.dart';
@@ -35,4 +36,5 @@ class MyApp extends StatelessWidget {
 
 initialized() async {
   Get.put(RecordingRecordsService());
+  Get.put(ApiService());
 }
