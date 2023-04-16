@@ -23,7 +23,7 @@ class RecordingRecordsService extends GetxService {
     storage.writeRecordingRecords(recordingRecordsList);
   }
 
-  addRecord(RecordingRecordModel record) {
+  addRecord(RecordModel record) {
     recordingRecordsList.add(record);
     writeRecords();
   }

@@ -4,7 +4,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:stt/common/utils/getFileName.dart';
+import 'package:stt/common/utils/get_file_name.dart';
 
 import '../common/theme.dart';
 import '../data/models/recording_record_model.dart';
@@ -18,9 +18,9 @@ class SpeechToTextBox extends StatefulWidget {
     required this.deleteOnPressed,
   }) : super(key: key);
 
-  final RecordingRecordModel record;
+  final RecordModel record;
   final Future<ResponseModel> Function(String path) computeOnPressed;
-  final Function(RecordingRecordModel record) deleteOnPressed;
+  final Function(RecordModel record) deleteOnPressed;
 
   @override
   State<SpeechToTextBox> createState() => _SpeechToTextBoxState();
@@ -37,8 +37,8 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
     fixedWaveColor: Colors.black12,
     liveWaveColor: AppTheme.orange,
     seekLineColor: AppTheme.orange,
-    spacing: 3.2,
-    waveThickness: 2.8,
+    spacing: 2.62,
+    waveThickness: 2.6,
   );
 
   @override
@@ -153,7 +153,7 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
           ),
           Positioned(
             top: 66,
-            left: 9.r,
+            left: 1.r,
             child: AudioFileWaveforms(
               size: Size(width, 70.r),
               playerController: controller,

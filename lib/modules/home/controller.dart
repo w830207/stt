@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -58,8 +59,28 @@ class HomeController extends GetxController {
     recorderController.reset();
     popup.stop();
     final path = await recorderController.stop(false);
-    final record = RecordingRecordModel.fromJson(
-        {'path': path, 'createdTime': tempTime.toString()});
+    if (path == null) return;
+
+    final record = RecordModel.fromJson({
+      'path': path,
+      'createdTime': tempTime.toString(),
+      'type': RecordModelType.recording.toValueString(),
+    });
+    RecordingRecordsService.to.addRecord(record);
+  }
+
+  Future<void> choseFile() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result == null) return;
+
+    File file = File(result.files.single.path!);
+    tempTime = DateTime.now().toLocal();
+    final record = RecordModel.fromJson({
+      'path': file.path,
+      'createdTime': tempTime.toString(),
+      'type': RecordModelType.file.toValueString(),
+    });
     RecordingRecordsService.to.addRecord(record);
   }
 
@@ -67,9 +88,15 @@ class HomeController extends GetxController {
     return await ApiService.to.automaticSpeechRecognition(filePath: path);
   }
 
-  deleteRecord(RecordingRecordModel record) {
-    recordingRecordsList.remove(record);
+  void deleteRecord(RecordModel record) {
+    recordingRecordsList.removeWhere((element) {
+      if (element.runtimeType == RecordModel) {
+        return record.path == element.path;
+      }
+      return record.path == element['path'];
+    });
     RecordingRecordsService.to.writeRecords();
+    if (record.type == RecordModelType.file.toValueString()) return;
     File(record.path).delete();
   }
 }

@@ -36,12 +36,12 @@ class HomePage extends GetView<HomeController> {
                             );
                           }
 
-                          late final RecordingRecordModel record;
+                          late final RecordModel record;
                           final item = controller.recordingRecordsList[index];
-                          if (item.runtimeType == RecordingRecordModel) {
+                          if (item.runtimeType == RecordModel) {
                             record = item;
                           } else {
-                            record = RecordingRecordModel.fromJson(item);
+                            record = RecordModel.fromJson(item);
                           }
 
                           return Padding(
@@ -64,8 +64,9 @@ class HomePage extends GetView<HomeController> {
             Align(
               alignment: const Alignment(0, 0.9),
               child: FloatingButton(
-                onLongPressStart: controller.recordingOnStart,
-                onLongPressEnd: controller.recordingOnEnd,
+                micOnLongPressStart: controller.recordingOnStart,
+                micOnLongPressEnd: controller.recordingOnEnd,
+                fileOnPressed: controller.choseFile,
               ),
             ),
           ],

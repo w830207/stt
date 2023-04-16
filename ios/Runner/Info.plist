@@ -49,5 +49,7 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
     <string>This app requires Mic permission.</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>This app requires Music permission.</string>
 </dict>
 </plist>
