@@ -10,13 +10,13 @@ import '../../models/response_model.dart';
 class ApiServiceRepository {
   final String baseUrl;
   late final Dio dio;
-  int timeout = 10000;
+  // int timeout = 20000;
 
   ApiServiceRepository(this.baseUrl) {
     dio = Dio();
     dio.options.baseUrl = baseUrl;
-    dio.options.connectTimeout = timeout;
-    dio.options.sendTimeout = timeout;
+    // dio.options.connectTimeout = timeout;
+    // dio.options.sendTimeout = timeout;
     headersInterceptor();
     prettyDioLog();
     modelLoadingError();
@@ -68,16 +68,31 @@ class ApiServiceRepository {
         if (popup.isLoading()) {
           popup.stop();
         }
-        handler.next(Response(
-          headers: response.headers,
-          data: ResponseModel.fromJson(response.data),
-          requestOptions: response.requestOptions,
-          statusCode: response.statusCode,
-          statusMessage: response.statusMessage,
-          isRedirect: response.isRedirect,
-          redirects: response.redirects,
-          extra: response.extra,
-        ));
+        switch (response.data.runtimeType) {
+          case List:
+            handler.next(Response(
+              headers: response.headers,
+              data: ResponseModel.fromJson(response.data.first),
+              requestOptions: response.requestOptions,
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              isRedirect: response.isRedirect,
+              redirects: response.redirects,
+              extra: response.extra,
+            ));
+            break;
+          default:
+            handler.next(Response(
+              headers: response.headers,
+              data: ResponseModel.fromJson(response.data),
+              requestOptions: response.requestOptions,
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              isRedirect: response.isRedirect,
+              redirects: response.redirects,
+              extra: response.extra,
+            ));
+        }
       },
     );
   }
@@ -91,15 +106,18 @@ class ApiServiceRepository {
           ...err.requestOptions.extra,
           'retry': retry + 1,
         };
+        // ResponseModel.fromJson(err.response?.data);
 
-        Timer(const Duration(seconds: 10), () {
-          Dio()
-            ..options = dio.options
-            ..interceptors.addAll(dio.interceptors)
-            ..fetch(retryOptions).then((value) {
-              handler.resolve(value);
-            });
-        });
+        if (retry <= 10) {
+          Timer(const Duration(seconds: 10), () {
+            Dio()
+              ..options = dio.options
+              ..interceptors.addAll(dio.interceptors)
+              ..fetch(retryOptions).then((value) {
+                handler.resolve(value);
+              });
+          });
+        }
       },
     );
   }

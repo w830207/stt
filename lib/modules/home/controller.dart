@@ -29,12 +29,12 @@ class HomeController extends GetxController {
     getDir();
     initRecorderController();
     recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
-    title.value = ApiService.to.huggingFaceModel;
+    title.value = ApiService.to.speechToTextModel;
   }
 
   selectModel(Object modelName) {
     title.value = modelName as String;
-    ApiService.to.changeModel(modelName);
+    ApiService.to.changeSpeechToTextModel(modelName);
   }
 
   void getDir() async {
@@ -92,7 +92,15 @@ class HomeController extends GetxController {
   }
 
   Future<ResponseModel> speechToText(String path) async {
-    return await ApiService.to.automaticSpeechRecognition(filePath: path);
+    return await ApiService.to.speechToText(filePath: path);
+  }
+
+  Future<ResponseModel> chineseToEnglish(String text) async {
+    return await ApiService.to.chineseToEnglish(text: text);
+  }
+
+  Future<ResponseModel> englishToChinese(String text) async {
+    return await ApiService.to.englishToChinese(text: text);
   }
 
   void deleteRecord(RecordModel record) {

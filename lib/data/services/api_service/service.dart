@@ -8,8 +8,8 @@ import 'repository.dart';
 class ApiService extends GetxService {
   static ApiService get to => Get.find();
   late ApiServiceRepository http;
-  late String huggingFaceModel;
-  List huggingFaceModelsList = [
+  late String speechToTextModel;
+  List speechToTextModelsList = [
     "openai/whisper-tiny.en",
     "kevin51jiang/whisper-tiny-zh-CN",
   ];
@@ -18,11 +18,11 @@ class ApiService extends GetxService {
   void onInit() {
     super.onInit();
     http = ApiServiceRepository("https://api-inference.huggingface.co/models/");
-    huggingFaceModel = huggingFaceModelsList.first;
+    speechToTextModel = speechToTextModelsList.first;
   }
 
-  changeModel(String modelName) {
-    huggingFaceModel = modelName;
+  changeSpeechToTextModel(String modelName) {
+    speechToTextModel = modelName;
   }
 
   /// 提供post方法
@@ -44,14 +44,32 @@ class ApiService extends GetxService {
     return response.data;
   }
 
-  Future<ResponseModel> automaticSpeechRecognition({
+  Future<ResponseModel> speechToText({
     required String filePath,
   }) async {
     var bytes = File(filePath).readAsBytesSync();
     return post(
-      huggingFaceModel,
+      speechToTextModel,
       data: Stream.fromIterable(bytes.map((e) => [e])),
       length: bytes.length,
+    );
+  }
+
+  Future<ResponseModel> chineseToEnglish({
+    required String text,
+  }) async {
+    return post(
+      "Helsinki-NLP/opus-mt-zh-en",
+      data: {"inputs": text},
+    );
+  }
+
+  Future<ResponseModel> englishToChinese({
+    required String text,
+  }) async {
+    return post(
+      "liam168/trans-opus-mt-en-zh",
+      data: {"inputs": text},
     );
   }
 }

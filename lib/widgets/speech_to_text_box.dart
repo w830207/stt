@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stt/common/utils/get_file_name.dart';
 
@@ -16,11 +15,15 @@ class SpeechToTextBox extends StatefulWidget {
     required this.record,
     required this.computeOnPressed,
     required this.deleteOnPressed,
+    required this.chineseToEnglish,
+    required this.englishToChinese,
   }) : super(key: key);
 
   final RecordModel record;
   final Future<ResponseModel> Function(String path) computeOnPressed;
   final Function(RecordModel record) deleteOnPressed;
+  final Future<ResponseModel> Function(String text) chineseToEnglish;
+  final Future<ResponseModel> Function(String text) englishToChinese;
 
   @override
   State<SpeechToTextBox> createState() => _SpeechToTextBoxState();
@@ -70,17 +73,26 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
     super.dispose();
   }
 
-  _translate() async {
-    final res = await widget.computeOnPressed(widget.record.path);
-    if (res.text!.isNotEmpty) {
-      answer = res.text!;
+  _speechToText() async {
+    final response = await widget.computeOnPressed(widget.record.path);
+    if (response.text!.isNotEmpty) {
+      answer = response.text!;
       setState(() {});
     }
   }
 
-  _copy() {
-    if (answer == "answer") return;
-    Clipboard.setData(ClipboardData(text: answer));
+  _translate(Object value) async {
+    late final ResponseModel response;
+    switch (value) {
+      case 1:
+        response = await widget.englishToChinese(answer);
+        break;
+      case -1:
+        response = await widget.chineseToEnglish(answer);
+        break;
+    }
+    answer = response.translate ?? "";
+    setState(() {});
   }
 
   @override
@@ -123,6 +135,7 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
               decoration: const BoxDecoration(
                 color: AppTheme.blueGrey,
                 shape: BoxShape.circle,
+                boxShadow: [AppTheme.shadow],
               ),
               child: IconButton(
                 onPressed: () async {
@@ -162,9 +175,10 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
               decoration: const BoxDecoration(
                 color: AppTheme.blueGrey,
                 shape: BoxShape.circle,
+                boxShadow: [AppTheme.shadow],
               ),
               child: IconButton(
-                onPressed: _translate,
+                onPressed: _speechToText,
                 icon: const Icon(Icons.textsms_outlined),
                 color: Colors.black,
                 splashColor: Colors.transparent,
@@ -175,20 +189,33 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
           Positioned(
             top: 198.r,
             left: 20.r,
-            child: Container(
-              width: 40.r,
-              height: 40.r,
-              margin: EdgeInsets.only(right: 26.r),
-              decoration: const BoxDecoration(
-                color: AppTheme.blueGrey,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: _copy,
-                icon: const Icon(Icons.copy),
-                color: Colors.black,
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+            child: PopupMenuButton(
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem(
+                    value: 1,
+                    child: Text("ENG to CN "),
+                  ),
+                  const PopupMenuItem(
+                    value: -1,
+                    child: Text("CN to ENG "),
+                  ),
+                ];
+              },
+              onSelected: _translate,
+              child: Container(
+                width: 40.r,
+                height: 40.r,
+                margin: EdgeInsets.only(right: 26.r),
+                decoration: const BoxDecoration(
+                  color: AppTheme.blueGrey,
+                  shape: BoxShape.circle,
+                  boxShadow: [AppTheme.shadow],
+                ),
+                child: const Icon(
+                  Icons.translate,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -202,6 +229,7 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
               decoration: const BoxDecoration(
                 color: AppTheme.pink,
                 shape: BoxShape.circle,
+                boxShadow: [AppTheme.shadow],
               ),
               child: IconButton(
                 onPressed: () {
@@ -218,9 +246,9 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
             child: Container(
               width: 242.r,
               height: 144.r,
-              decoration: BoxDecoration(
+              decoration: AppTheme.decoration.copyWith(
                 color: AppTheme.blueGrey,
-                borderRadius: BorderRadius.circular(30.r),
+                boxShadow: null,
               ),
               child: Center(
                 child: SingleChildScrollView(

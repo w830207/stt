@@ -45,8 +45,7 @@ Future recording(RecorderController recorderController) async {
         extendWaveform: true,
         showMiddleLine: false,
       ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
+      decoration: const BoxDecoration(
         color: Colors.black12,
       ),
       padding: const EdgeInsets.only(left: 18),

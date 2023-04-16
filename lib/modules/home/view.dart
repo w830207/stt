@@ -19,6 +19,7 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppTheme.blueGrey,
       appBar: AppBar(
+        centerTitle: false,
         title: Obx(() {
           return Text(
             controller.title.value,
@@ -28,7 +29,7 @@ class HomePage extends GetView<HomeController> {
         actions: [
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
-              return ApiService.to.huggingFaceModelsList
+              return ApiService.to.speechToTextModelsList
                   .map((modelName) => PopupMenuItem(
                         value: modelName,
                         child: Text(modelName),
@@ -83,6 +84,8 @@ class HomePage extends GetView<HomeController> {
                               record: record,
                               computeOnPressed: controller.speechToText,
                               deleteOnPressed: controller.deleteRecord,
+                              chineseToEnglish: controller.chineseToEnglish,
+                              englishToChinese: controller.englishToChinese,
                             ),
                           );
                         },

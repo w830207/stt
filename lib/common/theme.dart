@@ -8,16 +8,16 @@ abstract class AppTheme {
   static const Color red = Color(0xffe06e67);
   static const Color pink = Color(0xfffceeeb);
 
+  static const BoxShadow shadow = BoxShadow(
+    color: Colors.black12,
+    offset: Offset(-6, 4),
+    blurRadius: 4,
+  );
+
   static BoxDecoration decoration = BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.circular(30.r),
-    boxShadow: const [
-      BoxShadow(
-        color: Colors.black12,
-        offset: Offset(-6, 4),
-        blurRadius: 4,
-      ),
-    ],
+    borderRadius: BorderRadius.circular(16.r),
+    boxShadow: const [shadow],
   );
 
   static TextStyle get fileName => TextStyle(
