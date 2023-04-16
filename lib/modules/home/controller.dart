@@ -66,4 +66,10 @@ class HomeController extends GetxController {
   Future<ResponseModel> speechToText(String path) async {
     return await ApiService.to.automaticSpeechRecognition(filePath: path);
   }
+
+  deleteRecord(RecordingRecordModel record) {
+    recordingRecordsList.remove(record);
+    RecordingRecordsService.to.writeRecords();
+    File(record.path).delete();
+  }
 }

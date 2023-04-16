@@ -12,15 +12,19 @@ class RecordingRecordsService extends GetxService {
     super.onInit();
     storage = RecordingRecordsRepository();
     await storage.init();
+    readRecords();
+  }
+
+  readRecords() {
     recordingRecordsList.value = storage.readRecordingRecords() ?? [];
   }
 
-  _writeRecords() {
+  writeRecords() {
     storage.writeRecordingRecords(recordingRecordsList);
   }
 
   addRecord(RecordingRecordModel record) {
     recordingRecordsList.add(record);
-    _writeRecords();
+    writeRecords();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stt/common/theme.dart';
 
 class FloatingButton extends StatefulWidget {
   final GestureLongPressStartCallback? onLongPressStart;
@@ -24,9 +25,12 @@ class FloatingButtonState extends State<FloatingButton> {
       onLongPressEnd: widget.onLongPressEnd,
       onTap: widget.onPressed,
       child: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor: AppTheme.orange,
         onPressed: () {},
-        child: const Icon(Icons.mic),
+        child: const Icon(
+          Icons.mic,
+          color: Colors.white,
+        ),
       ),
     );
   }
