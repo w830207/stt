@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:stt/common/theme.dart';
 import 'package:stt/data/models/recording_record_model.dart';
+import 'package:stt/data/services/api_service/service.dart';
 import 'package:stt/widgets/float_button.dart';
 import 'package:stt/widgets/speech_to_text_box.dart';
 import '../../widgets/scroll_update_list.dart';
@@ -17,6 +18,38 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.blueGrey,
+      appBar: AppBar(
+        title: Obx(() {
+          return Text(
+            controller.title.value,
+            style: AppTheme.appbarTitle,
+          );
+        }),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return ApiService.to.huggingFaceModelsList
+                  .map((modelName) => PopupMenuItem(
+                        value: modelName,
+                        child: Text(modelName),
+                      ))
+                  .toList();
+            },
+            onSelected: controller.selectModel,
+            child: Container(
+              width: 40.0,
+              margin: const EdgeInsets.all(8),
+              decoration: AppTheme.decoration,
+              child: const Icon(
+                Icons.change_circle_outlined,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
       body: SafeArea(
         child: Stack(
           children: [

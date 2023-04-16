@@ -8,12 +8,21 @@ import 'repository.dart';
 class ApiService extends GetxService {
   static ApiService get to => Get.find();
   late ApiServiceRepository http;
-  String huggingFaceModel = "/openai/whisper-tiny.en";
+  late String huggingFaceModel;
+  List huggingFaceModelsList = [
+    "openai/whisper-tiny.en",
+    "kevin51jiang/whisper-tiny-zh-CN",
+  ];
 
   @override
   void onInit() {
     super.onInit();
     http = ApiServiceRepository("https://api-inference.huggingface.co/models/");
+    huggingFaceModel = huggingFaceModelsList.first;
+  }
+
+  changeModel(String modelName) {
+    huggingFaceModel = modelName;
   }
 
   /// 提供post方法

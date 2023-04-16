@@ -8,6 +8,18 @@ abstract class AppTheme {
   static const Color red = Color(0xffe06e67);
   static const Color pink = Color(0xfffceeeb);
 
+  static BoxDecoration decoration = BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(30.r),
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black12,
+        offset: Offset(-6, 4),
+        blurRadius: 4,
+      ),
+    ],
+  );
+
   static TextStyle get fileName => TextStyle(
         fontSize: 13.sp,
         color: Colors.black,
@@ -17,6 +29,12 @@ abstract class AppTheme {
   static TextStyle get createdTime => TextStyle(
         fontSize: 11.sp,
         color: Colors.black12,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle get appbarTitle => TextStyle(
+        fontSize: 22.sp,
+        color: Colors.black,
         fontWeight: FontWeight.w700,
       );
 }

@@ -88,17 +88,7 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(-6, 9),
-            blurRadius: 11,
-          )
-        ],
-      ),
+      decoration: AppTheme.decoration,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -175,7 +165,7 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
               ),
               child: IconButton(
                 onPressed: _translate,
-                icon: const Icon(Icons.translate),
+                icon: const Icon(Icons.textsms_outlined),
                 color: Colors.black,
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,

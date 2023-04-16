@@ -17,6 +17,7 @@ class HomeController extends GetxController {
   late Directory appDirectory;
   late final RxList recordingRecordsList;
   DateTime tempTime = DateTime(2011, 11, 11, 11, 11);
+  RxString title = "".obs;
 
   Future<void> onFetchMore() async {}
 
@@ -28,6 +29,12 @@ class HomeController extends GetxController {
     getDir();
     initRecorderController();
     recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
+    title.value = ApiService.to.huggingFaceModel;
+  }
+
+  selectModel(Object modelName) {
+    title.value = modelName as String;
+    ApiService.to.changeModel(modelName);
   }
 
   void getDir() async {
