@@ -11,6 +11,12 @@ A Speech-to-text project.
 - 漢字轉拼音、注音
 - 支援錄音、音檔
 
+## How To Use
+
+![1](https://user-images.githubusercontent.com/44136372/232783284-ca4785f1-e0d4-474e-8bbd-e51d50796833.png)
+![2](https://user-images.githubusercontent.com/44136372/232783295-c3212f6c-f561-4e8c-abb1-225c09df393f.png)
+
+
 ## Models
 
 ### Speech to Text
