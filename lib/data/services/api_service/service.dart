@@ -32,7 +32,7 @@ class ApiService extends GetxService {
     Map<String, dynamic>? query,
     int? length,
   }) async {
-    if (length == null) {
+    if (length != null) {
       http.dio.options.headers['content-length'] = length;
     }
 

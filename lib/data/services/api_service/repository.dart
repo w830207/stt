@@ -108,7 +108,7 @@ class ApiServiceRepository {
         };
         // ResponseModel.fromJson(err.response?.data);
 
-        if (retry <= 10) {
+        if (retry <= 5) {
           Timer(const Duration(seconds: 10), () {
             Dio()
               ..options = dio.options
@@ -117,6 +117,8 @@ class ApiServiceRepository {
                 handler.resolve(value);
               });
           });
+        }else{
+          popup.stop();
         }
       },
     );
