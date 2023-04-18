@@ -43,6 +43,7 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   flutter_flip_card: ^0.0.4
   file_picker: ^5.2.9
+  animated_list_item: ^0.0.1
 
   lpinyin:
     git:

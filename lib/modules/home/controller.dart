@@ -14,12 +14,14 @@ import 'package:stt/data/models/response_model.dart';
 import 'package:stt/data/services/api_service/service.dart';
 import 'package:stt/data/services/recording_record_service/service.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late final RecorderController recorderController;
   late Directory appDirectory;
   late final RxList recordingRecordsList;
   DateTime tempTime = DateTime(2011, 11, 11, 11, 11);
   RxString title = "".obs;
+  late AnimationController animationController;
 
   Future<void> onFetchMore() async {}
 
@@ -31,13 +33,18 @@ class HomeController extends GetxController {
     initRecorderController();
     recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
     title.value = ApiService.to.speechToTextModel;
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    animationController.forward();
   }
 
   @override
   Future<void> onReady() async {
     super.onReady();
     await getDir();
-    getSample();
+    animationController.forward();
   }
 
   selectModel(Object modelName) {
@@ -54,10 +61,9 @@ class HomeController extends GetxController {
     file = File("${appDirectory.path}/sample1.flac");
     await file.writeAsBytes(
         (await rootBundle.load('assets/sample1.flac')).buffer.asUint8List());
-    tempTime = DateTime.now().toLocal();
     final record = RecordModel.fromJson({
       'path': file.path,
-      'createdTime': tempTime.toString(),
+      'createdTime': 'sample1',
       'type': RecordModelType.file.toValueString(),
     });
     RecordingRecordsService.to.addRecord(record);

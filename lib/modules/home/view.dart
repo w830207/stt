@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'package:animated_list_item/animated_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -64,6 +65,12 @@ class HomePage extends GetView<HomeController> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
+                          if (controller.recordingRecordsList.isEmpty) {
+                            return TextButton(
+                                onPressed: controller.getSample,
+                                child: const Text("add Sample"));
+                          }
+
                           if (index == controller.recordingRecordsList.length) {
                             return SizedBox(
                               height: 0.1.sh,
@@ -78,16 +85,22 @@ class HomePage extends GetView<HomeController> {
                             record = RecordModel.fromJson(item);
                           }
 
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.r),
-                            child: SpeechToTextBox(
-                              record: record,
-                              computeOnPressed: controller.speechToText,
-                              deleteOnPressed: controller.deleteRecord,
-                              chineseToEnglish: controller.chineseToEnglish,
-                              englishToChinese: controller.englishToChinese,
-                              chineseToPinyin: controller.chineseToPinyin,
-                              chineseToZhuyin: controller.chineseToZhuyin,
+                          return AnimatedListItem(
+                            index: index,
+                            length: controller.recordingRecordsList.length,
+                            aniController: controller.animationController,
+                            animationType: AnimationType.zoomIn,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.r),
+                              child: SpeechToTextBox(
+                                record: record,
+                                computeOnPressed: controller.speechToText,
+                                deleteOnPressed: controller.deleteRecord,
+                                chineseToEnglish: controller.chineseToEnglish,
+                                englishToChinese: controller.englishToChinese,
+                                chineseToPinyin: controller.chineseToPinyin,
+                                chineseToZhuyin: controller.chineseToZhuyin,
+                              ),
                             ),
                           );
                         },
