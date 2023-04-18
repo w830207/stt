@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lpinyin/lpinyin.dart';
@@ -27,10 +28,16 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getDir();
     initRecorderController();
     recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
     title.value = ApiService.to.speechToTextModel;
+  }
+
+  @override
+  Future<void> onReady() async {
+    super.onReady();
+    await getDir();
+    getSample();
   }
 
   selectModel(Object modelName) {
@@ -38,8 +45,22 @@ class HomeController extends GetxController {
     ApiService.to.changeSpeechToTextModel(modelName);
   }
 
-  void getDir() async {
+  getDir() async {
     appDirectory = await getApplicationDocumentsDirectory();
+  }
+
+  Future<void> getSample() async {
+    File? file;
+    file = File("${appDirectory.path}/sample1.flac");
+    await file.writeAsBytes(
+        (await rootBundle.load('assets/sample1.flac')).buffer.asUint8List());
+    tempTime = DateTime.now().toLocal();
+    final record = RecordModel.fromJson({
+      'path': file.path,
+      'createdTime': tempTime.toString(),
+      'type': RecordModelType.file.toValueString(),
+    });
+    RecordingRecordsService.to.addRecord(record);
   }
 
   void initRecorderController() {
@@ -105,7 +126,7 @@ class HomeController extends GetxController {
   }
 
   String chineseToPinyin(String text) {
-    return PinyinHelper.getPinyin(text,format: PinyinFormat.WITH_TONE_MARK);
+    return PinyinHelper.getPinyin(text, format: PinyinFormat.WITH_TONE_MARK);
   }
 
   String chineseToZhuyin(String text) {
