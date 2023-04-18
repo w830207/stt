@@ -177,6 +177,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  lpinyin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "9c53cb1616f14c7a3ae6dc4d88b795dfc8fe8e22"
+      url: "https://github.com/w830207/lpinyin.git"
+    source: git
+    version: "3.0.0"
   matcher:
     dependency: transitive
     description:

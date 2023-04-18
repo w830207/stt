@@ -17,6 +17,8 @@ class SpeechToTextBox extends StatefulWidget {
     required this.deleteOnPressed,
     required this.chineseToEnglish,
     required this.englishToChinese,
+    required this.chineseToPinyin,
+    required this.chineseToZhuyin,
   }) : super(key: key);
 
   final RecordModel record;
@@ -24,6 +26,8 @@ class SpeechToTextBox extends StatefulWidget {
   final Function(RecordModel record) deleteOnPressed;
   final Future<ResponseModel> Function(String text) chineseToEnglish;
   final Future<ResponseModel> Function(String text) englishToChinese;
+  final Function(String text) chineseToPinyin;
+  final Function(String text) chineseToZhuyin;
 
   @override
   State<SpeechToTextBox> createState() => _SpeechToTextBoxState();
@@ -84,14 +88,23 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
   _translate(Object value) async {
     late final ResponseModel response;
     switch (value) {
-      case 1:
+      case 0:
         response = await widget.englishToChinese(answer);
+        answer = response.translate ?? "";
         break;
-      case -1:
+      case 1:
         response = await widget.chineseToEnglish(answer);
+        answer = response.translate ?? "";
+        break;
+      case 2:
+        answer = widget.chineseToPinyin(answer);
+        break;
+      case 3:
+        answer = widget.chineseToZhuyin(answer);
         break;
     }
-    answer = response.translate ?? "";
+
+
     setState(() {});
   }
 
@@ -193,12 +206,20 @@ class _SpeechToTextBoxState extends State<SpeechToTextBox> {
               itemBuilder: (BuildContext context) {
                 return [
                   const PopupMenuItem(
-                    value: 1,
+                    value: 0,
                     child: Text("ENG to CN "),
                   ),
                   const PopupMenuItem(
-                    value: -1,
+                    value: 1,
                     child: Text("CN to ENG "),
+                  ),
+                  const PopupMenuItem(
+                    value: 2,
+                    child: Text("CN to PinYin "),
+                  ),
+                  const PopupMenuItem(
+                    value: 3,
+                    child: Text("CN to ZhuYin "),
                   ),
                 ];
               },

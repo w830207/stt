@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lpinyin/lpinyin.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stt/common/popup.dart' as popup;
 import 'package:stt/data/models/recording_record_model.dart';
@@ -101,6 +102,14 @@ class HomeController extends GetxController {
 
   Future<ResponseModel> englishToChinese(String text) async {
     return await ApiService.to.englishToChinese(text: text);
+  }
+
+  String chineseToPinyin(String text) {
+    return PinyinHelper.getPinyin(text,format: PinyinFormat.WITH_TONE_MARK);
+  }
+
+  String chineseToZhuyin(String text) {
+    return ZhuyinHelper.getZhuyin(text);
   }
 
   void deleteRecord(RecordModel record) {

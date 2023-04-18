@@ -86,6 +86,8 @@ class HomePage extends GetView<HomeController> {
                               deleteOnPressed: controller.deleteRecord,
                               chineseToEnglish: controller.chineseToEnglish,
                               englishToChinese: controller.englishToChinese,
+                              chineseToPinyin: controller.chineseToPinyin,
+                              chineseToZhuyin: controller.chineseToZhuyin,
                             ),
                           );
                         },
