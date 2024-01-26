@@ -10,8 +10,7 @@ class ApiService extends GetxService {
   late ApiServiceRepository http;
   late String speechToTextModel;
   List speechToTextModelsList = [
-    "openai/whisper-tiny.en",
-    "kevin51jiang/whisper-tiny-zh-CN",
+    "openai/whisper-large-v3",
   ];
 
   @override
