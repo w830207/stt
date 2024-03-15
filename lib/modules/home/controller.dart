@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:stt/common/popup.dart' as popup;
 import 'package:stt/data/models/recording_record_model.dart';
 import 'package:stt/data/models/response_model.dart';
@@ -27,9 +29,24 @@ class HomeController extends GetxController
 
   Future<void> onReFetch() async {}
 
+  late StreamSubscription _intentSub;
+
   @override
   void onInit() {
     super.onInit();
+
+    // Listen to media sharing coming from outside the app while the app is in the memory.
+    _intentSub = ReceiveSharingIntent.getMediaStream().listen((value) {
+      receiveFile(value.first.path);
+    }, onError: (err) {
+      debugPrint("getIntentDataStream error: $err");
+    });
+
+    // Get the media sharing coming from outside the app while the app is closed.
+    ReceiveSharingIntent.getInitialMedia().then((value) {
+        ReceiveSharingIntent.reset();
+    });
+
     initRecorderController();
     recordingRecordsList = RecordingRecordsService.to.recordingRecordsList;
     title.value = ApiService.to.speechToTextModel;
@@ -40,11 +57,18 @@ class HomeController extends GetxController
     animationController.forward();
   }
 
+
   @override
   Future<void> onReady() async {
     super.onReady();
     await getDir();
     animationController.forward();
+  }
+
+  @override
+  void onClose() {
+    _intentSub.cancel();
+    super.onClose();
   }
 
   selectModel(Object modelName) {
@@ -109,10 +133,20 @@ class HomeController extends GetxController
         await FilePicker.platform.pickFiles(type: FileType.audio);
     if (result == null) return;
 
-    File file = File(result.files.single.path!);
+    // File file = File(result.files.single.path!);
     tempTime = DateTime.now().toLocal();
     final record = RecordModel.fromJson({
-      'path': file.path,
+      'path': result.files.single.path!,
+      'createdTime': tempTime.toString(),
+      'type': RecordModelType.file.toValueString(),
+    });
+    RecordingRecordsService.to.addRecord(record);
+  }
+
+  void receiveFile(String path){
+    tempTime = DateTime.now().toLocal();
+    final record = RecordModel.fromJson({
+      'path': path,
       'createdTime': tempTime.toString(),
       'type': RecordModelType.file.toValueString(),
     });

@@ -16,10 +16,10 @@ bool isLoading() {
 }
 
 Future loading() async {
-  EasyLoading.instance.indicatorWidget = SizedBox(
+  EasyLoading.instance.indicatorWidget = const SizedBox(
     width: 50,
     child: Column(
-      children: const [
+      children: [
         SpinKitFadingCircle(
           color: Colors.white,
         ),

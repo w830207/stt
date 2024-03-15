@@ -20,8 +20,7 @@ A Speech-to-text project.
 ## Models
 
 ### Speech to Text
-- 英: openai/whisper-tiny.en 
-- 中: kevin51jiang/whisper-tiny-zh-CN
+- openai/whisper-large-v3
 
 ### Translation
 - 英轉中: liam168/trans-opus-mt-en-zh 
